@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030407">
+<title>Zonex Tour BD — Tournament App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler-icons-webfont@latest/tabler-icons.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{--a:#ff0033;--ad:rgba(255,0,51,.15);--brda:rgba(255,0,51,.4);--bg:#030407;}
+  *{margin:0;padding:0;box-sizing:border-box}
+  
+  /* 🔥 লেখা কপি বা সিলেক্ট হওয়া বন্ধ */
+  body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:#eef0f8;min-height:100vh;overflow-x:hidden;
+    -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none;}
+    
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(circle 600px at 50% -10%,var(--ad),transparent 70%),
+               radial-gradient(circle 500px at 85% 60%,rgba(255,0,51,.06),transparent 70%);}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:linear-gradient(rgba(255,0,51,.03) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,0,51,.03) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 30%,black,transparent 90%);}
+  
+  .font-orbitron{font-family:'Orbitron',sans-serif}
+  .font-mono{font-family:'Share Tech Mono',monospace}
+  .glow{box-shadow:0 0 30px var(--ad),0 0 0 1px var(--brda)}
+  
+  .btn{background:linear-gradient(135deg,#ff0033,#b30024);box-shadow:0 0 28px var(--brda),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .25s,box-shadow .25s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 0 45px var(--brda),inset 0 1px 0 rgba(255,255,255,.6)}
+  
+  /* 🔥 মোবাইলের নতুন 3D ডিজাইন (একদম বাস্তব হাতের মুঠোয় ধরা মোবাইলের মতো) */
+  .phone-wrap {
+    perspective: 1500px; /* 3D গভীরতা বাড়ানোর জন্য */
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+  }
+  
+  .phone {
+    transform: rotateY(-28deg) rotateX(12deg) rotateZ(-4deg) scale(0.9);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.8s ease;
+    box-shadow: -30px 35px 60px rgba(0,0,0,0.9), 15px -5px 40px var(--ad), inset 0 0 0 2px rgba(255,255,255,0.1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  
+  /* ক্লিক করলে একদম সোজা 3D ভিউ */
+  .phone.flipped {
+    transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) scale(1);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 40px var(--ad), inset 0 0 0 2px rgba(255,255,255,0.15);
+  }
+
+  /* মোবাইলের স্ক্রিন গ্লাস ইফেক্ট */
+  .phone::after {
+    content: ''; position: absolute; inset: 0; border-radius: 44px; pointer-events: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%, rgba(0,0,0,0.3) 100%);
+    z-index: 40;
+  }
+  
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);transition:all .3s}
+  .dot.on{background:#fff;width:22px;border-radius:4px;box-shadow:0 0 10px var(--a)}
+  .tag{animation:blink 2s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+  img.shot{transition:opacity .3s ease}
+  .stat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:12px}
+  #siteDescriptionHero{white-space:pre-line;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="relative z-10 border-b border-white/10 bg-[#030407]/80 backdrop-blur-md">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-lg border border-[var(--a)] bg-[#0d0f1b] flex items-center justify-center overflow-hidden">
+        <img id="navLogo" src="" class="w-full h-full object-cover hidden" alt="logo">
+        <i id="navLogoIcon" class="ti ti-device-gamepad-2 text-[var(--a)] text-lg"></i>
+      </div>
+      <div>
+        <div class="font-orbitron font-black text-sm tracking-widest text-white" id="siteNameNav">Zonex Tour BD</div>
+        <div class="font-mono text-[9px] tracking-wider text-neutral-500" id="siteSubNav">TOURNAMENT PLATFORM</div>
+      </div>
+    </div>
+    <a id="telegramBtn" href="#" target="_blank" rel="noopener"
+       class="font-orbitron text-[10px] font-bold px-3 py-2 rounded-lg border border-[var(--brda)] bg-[var(--ad)] text-white hover:bg-[var(--a)] transition flex items-center gap-1.5">
+      <i class="ti ti-brand-telegram text-sm"></i> TELEGRAM
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<main class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+  <div class="text-center mb-8">
+    <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-neutral-300 font-mono text-[10px]">
+        <span class="w-1.5 h-1.5 rounded-full bg-[var(--a)] tag"></span> OFFICIAL TOURNAMENT PLATFORM
+      </span>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--ad)] border border-[var(--brda)] text-[var(--a)] font-mono text-[10px]">
+        <i class="ti ti-shield-check text-xs"></i> FREE FIRE TOURNAMENTS
+      </span>
+    </div>
+
+    <h1 class="font-orbitron font-black text-white leading-tight mb-3 text-[clamp(1.6rem,5vw,2.9rem)]">
+      <span id="siteNameHero">Zonex Tour BD</span><br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#ff7788] to-[var(--a)]" id="siteTaglineHero">TOURNAMENT ARENA</span>
+    </h1>
+
+    <p class="text-neutral-300 text-sm sm:text-base max-w-xl mx-auto mb-6" id="siteDescriptionHero">
+      🏆 BANGLADESH GAMING TOURNAMENT PLATFORM — আপনার স্কোয়াড নিয়ে টুর্নামেন্টে যোগ দিন, ম্যাচের আপডেট দেখুন এবং জিতে নিন চ্যাম্পিয়নের খেতাব। 🎮 JOIN THE BATTLE • PLAY TO WIN 🔥
+    </p>
+
+    <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto mb-6">
+      <div class="stat-card p-3 text-center">
+        <div class="font-mono text-[9px] text-neutral-500 tracking-widest mb-1 flex items-center justify-center gap-1">
+          <i class="ti ti-package text-[var(--a)]"></i> APP SIZE
+        </div>
+        <div class="font-orbitron text-lg font-black text-white" id="appSize">—</div>
+      </div>
+      <div class="stat-card p-3 text-center">
+        <div class="font-mono text-[9px] text-neutral-500 tracking-widest mb-1 flex items-center justify-center gap-1">
+          <i class="ti ti-versions text-[var(--a)]"></i> VERSION
+        </div>
+        <div class="font-orbitron text-lg font-black text-white" id="appVersion">—</div>
+      </div>
+    </div>
+
+    <button onclick="startDl()" class="btn w-full sm:w-auto px-10 py-3.5 rounded-xl text-white font-orbitron font-extrabold text-xs sm:text-sm tracking-wider flex items-center justify-center gap-2 mx-auto">
+      <i class="ti ti-download text-xl"></i> DOWNLOAD TOURNAMENT APP
+    </button>
+
+    <div id="dlBox" class="hidden mt-3 max-w-sm mx-auto">
+      <div class="flex justify-between font-mono text-[10px] mb-1">
+        <span id="dlMsg" class="text-neutral-300">Preparing...</span>
+        <span id="dlPct" class="text-[var(--a)]">0%</span>
+      </div>
+      <div class="h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div id="dlBar" class="h-full w-0 bg-gradient-to-r from-[var(--a)] via-white to-[var(--a)] transition-all"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHONE SCREENSHOT (3D Perspective) -->
+  <div class="phone-wrap">
+    <div class="phone relative w-[260px] sm:w-[290px] h-[540px] sm:h-[600px] bg-[#070810] rounded-[44px] p-2.5 border-2 border-white/20"
+         id="phoneMockup" onclick="togglePhone()" 
+         onmousedown="pauseSlider()" onmouseup="resumeSlider()" onmouseleave="resumeSlider()" 
+         ontouchstart="pauseSlider()" ontouchend="resumeSlider()">
+      
+      <!-- ডাইনামিক আইল্যান্ড -->
+      <div class="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-30 border border-white/10 shadow-[inset_0_1px_3px_rgba(255,255,255,0.2)]"></div>
+      
+      <!-- স্ক্রিন -->
+      <div class="w-full h-full bg-black rounded-[34px] overflow-hidden relative border border-white/5">
+        <img id="shot" class="shot w-full h-full object-cover absolute inset-0" src="" alt="app screenshot">
+        
+        <div id="noImages" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+          <i class="ti ti-photo-off text-4xl text-neutral-600 mb-2"></i>
+          <div class="font-mono text-[10px] text-neutral-600">No images uploaded yet</div>
+        </div>
+        
+        <button onclick="event.stopPropagation(); prev()" aria-label="prev" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 border border-white/40 text-white text-xl flex items-center justify-center z-20">‹</button>
+        <button onclick="event.stopPropagation(); next()" aria-label="next" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/70 border border-white/40 text-white text-xl flex items-center justify-center z-20">›</button>
+        
+        <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20" id="dotsBox"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="text-center mt-2 font-mono text-[10px] text-neutral-500 tracking-wider flex items-center justify-center gap-2">
+    <i class="ti ti-hand-finger text-sm text-[var(--a)]"></i> Tap phone to see front view
+  </div>
+
+  <!-- ACTIVE USERS + DOWNLOADS -->
+  <div class="grid grid-cols-2 gap-3 max-w-sm mx-auto mt-8">
+    <div class="stat-card p-3 text-center">
+      <div class="font-mono text-[9px] text-neutral-500 tracking-widest mb-1 flex items-center justify-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ACTIVE USERS
+      </div>
+      <div class="font-orbitron text-xl font-black text-emerald-400" id="activeCount">—</div>
+    </div>
+    <div class="stat-card p-3 text-center">
+      <div class="font-mono text-[9px] text-neutral-500 tracking-widest mb-1 flex items-center justify-center gap-1">
+        <i class="ti ti-download text-[var(--a)]"></i> DOWNLOADS
+      </div>
+      <div class="font-orbitron text-xl font-black text-[var(--a)]" id="downloadCount">—</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
+      <i class="ti ti-clipboard-list text-2xl text-[var(--a)]"></i>
+      <div><div class="font-orbitron text-[11px] font-bold text-white">REGISTER</div><div class="font-mono text-[9px] text-neutral-500">Tournament Entry</div></div>
+    </div>
+    <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
+      <i class="ti ti-users-group text-2xl text-[var(--a)]"></i>
+      <div><div class="font-orbitron text-[11px] font-bold text-white">SQUAD UP</div><div class="font-mono text-[9px] text-neutral-500">Build Your Team</div></div>
+    </div>
+    <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
+      <i class="ti ti-swords text-2xl text-[var(--a)]"></i>
+      <div><div class="font-orbitron text-[11px] font-bold text-white">COMPETE</div><div class="font-mono text-[9px] text-neutral-500">Play Matches</div></div>
+    </div>
+    <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex items-center gap-3">
+      <i class="ti ti-crown text-2xl text-[var(--a)]"></i>
+      <div><div class="font-orbitron text-[11px] font-bold text-white">WIN</div><div class="font-mono text-[9px] text-neutral-500">Become Champion</div></div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="relative z-10 bg-[#030407] border-t border-white/[0.08] pt-12 pb-10 text-neutral-400 font-rajdhani">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-6 mb-10">
+      <div>
+        <div class="flex items-center gap-3.5 mb-4">
+          <div class="w-10 h-10 rounded-xl border border-[var(--a)] overflow-hidden shrink-0 bg-[#0d0f1b] flex items-center justify-center">
+            <img id="footerLogo" src="" class="w-full h-full object-cover hidden" alt="logo">
+            <i id="footerLogoIcon" class="ti ti-device-gamepad-2 text-[var(--a)] text-xl"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-orbitron font-black text-lg tracking-[0.25em] text-white" id="siteNameFooter">Zonex Tour BD</span>
+            <span class="font-mono text-[0.62rem] text-neutral-400 tracking-wider">OFFICIAL TOURNAMENT APP</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-orbitron text-xs font-bold text-white uppercase tracking-wider mb-4">TOURNAMENT SUPPORT</h4>
+        <ul class="space-y-3 text-sm font-mono">
+          <li class="flex items-center gap-2.5 text-neutral-300"><i class="ti ti-user text-[var(--a)] text-lg"></i> <span id="supportName">Zonex Tour BD</span></li>
+          <li><a id="supportPhoneLink" href="#" class="flex items-center gap-2.5 text-neutral-300 hover:text-[var(--a)] transition-colors"><i class="ti ti-phone text-[var(--a)] text-lg"></i> <span id="supportPhone">—</span></a></li>
+          <li><a id="supportEmailLink" href="#" class="flex items-center gap-2.5 text-neutral-300 hover:text-[var(--a)] transition-colors"><i class="ti ti-mail text-[var(--a)] text-lg"></i> <span id="supportEmail">—</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-6 border-t border-white/[0.06] text-center text-[0.7rem] font-mono text-neutral-500 tracking-wider">
+      <span id="copyrightText">© 2026 Zonex Tour BD. ALL RIGHTS RESERVED.</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, runTransaction, set, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCBgH4hfW4psQQMg_ngnNJOBM65ZNTpP4M",
+  authDomain: "zonex-website.firebaseapp.com",
+  databaseURL: "https://zonex-website-default-rtdb.firebaseio.com",
+  projectId: "zonex-website",
+  storageBucket: "zonex-website.firebasestorage.app",
+  messagingSenderId: "170863655900",
+  appId: "1:170863655900:web:c6f1e9fbeb6b9e05b8ed19"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+function formatNumber(num) {
+  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+  return num.toString();
+}
+
+/* Active Users */
+const myId = 'u_' + Math.random().toString(36).slice(2,10);
+const meRef = ref(db, 'active/' + myId);
+set(meRef, true);
+onDisconnect(meRef).remove();
+window.addEventListener('beforeunload', () => remove(meRef));
+
+onValue(ref(db, 'stats'), snap => {
+  const s = snap.val() || {};
+  
+  onValue(ref(db, 'active'), aSnap => {
+    const active = aSnap.val() ? Object.keys(aSnap.val()).length : 0;
+    const customActive = s.customActiveUsers || 0;
+    document.getElementById('activeCount').textContent = formatNumber(active + customActive);
+  });
+
+  const real = s.downloadsReal || 0;
+  const customDl = s.customDownloads || 0;
+  document.getElementById('downloadCount').textContent = formatNumber(real + customDl);
+});
+
+/* Config */
+let SHOTS = [];
+let APK_URL = '';
+let idx = 0;
+let slideInterval = null;
+let isPaused = false;
+
+const shotEl = document.getElementById('shot');
+const dotsBox = document.getElementById('dotsBox');
+const noImages = document.getElementById('noImages');
+
+onValue(ref(db, 'config'), snap => {
+  const c = snap.val() || {};
+
+  if (c.logo) {
+    ['navLogo','footerLogo'].forEach(id => {
+      const el = document.getElementById(id);
+      el.src = c.logo; el.classList.remove('hidden');
+    });
+    ['navLogoIcon','footerLogoIcon'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  }
+
+  if (c.siteName) {
+    document.getElementById('siteNameNav').textContent = c.siteName;
+    document.getElementById('siteNameHero').textContent = c.siteName;
+    document.getElementById('siteNameFooter').textContent = c.siteName;
+  }
+  if (c.siteSub) document.getElementById('siteSubNav').textContent = c.siteSub;
+  if (c.siteTagline) document.getElementById('siteTaglineHero').textContent = c.siteTagline;
+  if (c.siteDescription) document.getElementById('siteDescriptionHero').textContent = c.siteDescription;
+  if (c.copyright) document.getElementById('copyrightText').textContent = c.copyright;
+  if (c.supportName) document.getElementById('supportName').textContent = c.supportName;
+  if (c.supportPhone) {
+    document.getElementById('supportPhone').textContent = c.supportPhone;
+    document.getElementById('supportPhoneLink').href = 'tel:' + c.supportPhone;
+  }
+  if (c.supportEmail) {
+    document.getElementById('supportEmail').textContent = c.supportEmail;
+    document.getElementById('supportEmailLink').href = 'mailto:' + c.supportEmail;
+  }
+  if (c.telegram) {
+    document.getElementById('telegramBtn').href = c.telegram;
+    document.getElementById('telegramBtn').style.display = '';
+  } else {
+    document.getElementById('telegramBtn').style.display = 'none';
+  }
+
+  if (c.apkUrl) APK_URL = c.apkUrl;
+  document.getElementById('appSize').textContent = c.appSize || '—';
+  document.getElementById('appVersion').textContent = c.appVersion || '—';
+
+  SHOTS = c.images ? Object.values(c.images) : [];
+  if (SHOTS.length === 0) {
+    noImages.classList.remove('hidden');
+    shotEl.style.opacity = 0;
+    dotsBox.innerHTML = '';
+  } else {
+    noImages.classList.add('hidden');
+    idx = 0;
+    renderDots();
+    renderShot();
+    startSlider();
+  }
+});
+
+function renderDots(){
+  dotsBox.innerHTML = '';
+  SHOTS.forEach((_, i) => {
+    const b = document.createElement('button');
+    b.className = 'dot' + (i === idx ? ' on' : '');
+    b.onclick = (e) => { e.stopPropagation(); idx = i; renderDots(); renderShot(); };
+    dotsBox.appendChild(b);
+  });
+}
+function renderShot(){
+  if(!SHOTS.length) return;
+  shotEl.style.opacity = 0;
+  setTimeout(()=>{ shotEl.src = SHOTS[idx]; shotEl.style.opacity = 1; }, 150);
+}
+
+/* স্লাইডার সিস্টেম (৩ সেকেন্ড পর পর) */
+function startSlider() {
+  if(slideInterval) clearInterval(slideInterval);
+  slideInterval = setInterval(() => {
+    if(!document.hidden && SHOTS.length > 1 && !isPaused) {
+      idx = (idx + 1) % SHOTS.length;
+      renderDots();
+      renderShot();
+    }
+  }, 3000);
+}
+
+window.pauseSlider = function() { isPaused = true; };
+window.resumeSlider = function() { setTimeout(() => { isPaused = false; }, 1000); };
+
+window.next = (e) => { 
+  if(e) e.stopPropagation();
+  if(!SHOTS.length) return; 
+  idx = (idx + 1) % SHOTS.length; 
+  renderDots(); 
+  renderShot(); 
+};
+window.prev = (e) => { 
+  if(e) e.stopPropagation();
+  if(!SHOTS.length) return; 
+  idx = (idx - 1 + SHOTS.length) % SHOTS.length; 
+  renderDots(); 
+  renderShot(); 
+};
+
+/* মোবাইল 3D টগল (ক্লিক করলে সোজা, আবার ক্লিক করলে বাস্তব বাঁকানো) */
+window.togglePhone = function() {
+  const phone = document.getElementById('phoneMockup');
+  phone.classList.toggle('flipped');
+};
+
+let running = false;
+window.startDl = function(){
+  if(running) return; running = true;
+  if(!APK_URL){ alert('APK link not set yet. Please contact admin.'); running=false; return; }
+  
+  const box=document.getElementById('dlBox'), bar=document.getElementById('dlBar'),
+        pct=document.getElementById('dlPct'), msg=document.getElementById('dlMsg');
+  box.classList.remove('hidden');
+  let p = 0;
+  
+  const iv = setInterval(()=>{
+    p += Math.random()*14 + 5;
+    if(p >= 100){
+      p = 100; clearInterval(iv);
+      bar.style.width='100%'; pct.textContent='100%';
+      msg.textContent='Downloading...';
+      
+      // ডাটাবেজে ডাউনলোড কাউন্ট বাড়ানো
+      runTransaction(ref(db, 'stats/downloadsReal'), c => (c || 0) + 1);
+      
+      // 🔥 সরাসরি ডাউনলোড শুরু করার কোড (পেজ পরিবর্তন হবে না)
+      setTimeout(()=>{ 
+        const a = document.createElement('a');
+        a.href = APK_URL;
+        a.download = 'Zonex_Tour_BD.apk'; // ফাইলের নাম
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        running = false; 
+      }, 600);
+      
+    } else {
+      bar.style.width = p + '%'; pct.textContent = Math.floor(p) + '%';
+      msg.textContent = 'Downloading app package...';
+    }
+  }, 170);
+};
+</script>
+</body>
+</html>
